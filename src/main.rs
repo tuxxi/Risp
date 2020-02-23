@@ -1,6 +1,9 @@
 extern crate clap;
 extern crate rustyline;
 
+mod expr;
+mod list;
+
 use rustyline::error::ReadlineError;
 use rustyline::Editor;
 
@@ -26,8 +29,7 @@ fn repl() -> io::Result<()> {
                 println!("  {}", line);
             },
             Err(ReadlineError::Interrupted) => {
-                println!("CTRL-C");
-                break
+                println!("Interrupted");
             },
             Err(ReadlineError::Eof) => {
                 println!("CTRL-D");
