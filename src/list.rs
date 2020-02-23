@@ -5,12 +5,14 @@
 
 use std::rc::Rc;
 
+#[derive(Debug)]
 pub struct List<T> {
     head: Link<T>,
 }
 
 type Link<T> = Option<Rc<Node<T>>>;
 
+#[derive(Debug)]
 struct Node<T> {
     elem: T,
     next: Link<T>,
@@ -21,14 +23,14 @@ impl<T> List<T> {
         List { head: None }
     }
 
-    pub fn cons(&self, elem: T) -> List<T> {
+    pub fn cons(&self, elem: T) -> Self { 
         List { head: Some(Rc::new(Node {
             elem: elem,
             next: self.head.clone(),
         }))}
     }
 
-    pub fn tail(&self) -> List<T> {
+    pub fn tail(&self) -> Self {
         List { head: self.head.as_ref().and_then(|node| node.next.clone()) }
     }
 
@@ -38,6 +40,10 @@ impl<T> List<T> {
 
     pub fn iter(&self) -> Iter<'_, T> {
         Iter { next: self.head.as_ref().map(|node| &**node) }
+    }
+
+    pub fn nil() -> Self {
+        List { head: None }
     }
 }
 

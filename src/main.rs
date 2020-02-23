@@ -3,6 +3,7 @@ extern crate rustyline;
 
 mod expr;
 mod list;
+mod parse;
 
 use rustyline::error::ReadlineError;
 use rustyline::Editor;
