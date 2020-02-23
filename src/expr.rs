@@ -2,15 +2,17 @@ use std::fmt;
 
 use crate::list::List;
 
+#[derive(Debug)]
 pub enum Atom {
+    Builtin(String),
     Boolean(bool),
     Char(u8),
-    Float(f64),
-    Integer(i64),
+    Number(f64),
     Str(String),
     Symbol(String),
 }
 
+#[derive(Debug)]
 pub enum SExpr {
     Atom(Atom),
     SExpr(List<SExpr>),
@@ -19,12 +21,10 @@ pub enum SExpr {
 impl fmt::Display for Atom {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
-            Atom::Boolean(b)    => write!(f, "{}", b),
             Atom::Char(c)       => write!(f, "#{}", c),
-            Atom::Float(n)      => write!(f, "{}", n),
-            Atom::Integer(i)    => write!(f, "{}", i),
+            Atom::Number(n)     => write!(f, "{}", n),
             Atom::Str(s)        => write!(f, "\"{}\"", s),
-            Atom::Symbol(s)     => write!(f, "{}", s),
+            x@_                 => write!(f, "{}", x),
         }
     }
 }
@@ -47,12 +47,13 @@ impl fmt::Display for SExpr {
 #[cfg(test)]
 mod test {
     use super::*;
+
     #[test]
     fn construct() {
         let st = SExpr::Atom(Atom::Str(String::from("hello, world")));
-        let one = SExpr::Atom(Atom::Integer(1));
-        let two = SExpr::Atom(Atom::Integer(2));
-        let three = SExpr::Atom(Atom::Integer(3));
+        let one = SExpr::Atom(Atom::Number(1.));
+        let two = SExpr::Atom(Atom::Number(2.));
+        let three = SExpr::Atom(Atom::Number(3.));
         let lst = SExpr::SExpr(List::new().cons(three).cons(two).cons(one).cons(st));
         assert_eq!(format!("{}", lst).to_string(), 
             String::from("(\"hello, world\" 1 2 3 )"));
